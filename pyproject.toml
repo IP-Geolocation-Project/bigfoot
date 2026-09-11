@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bigfoot"
+version = "1.0.0"
+description = "A system for conducting active network measurements using RIPE Atlas and CAIDA Ark"
+readme = "README.md"
+requires-python = ">=3.14"
+authors = [{ name = "Huseyn Gambarov", email = "qambarov2812@gmail.com" }]
+keywords = ["network-measurement", "ripe-atlas", "caida-ark", "ping"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet",
+    "Topic :: System :: Networking :: Monitoring",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "colorama>=0.4.6",
+    "grpcio>=1.78.0",
+    "protobuf>=6.31.1,<7",
+    "pyrate-limiter>=3.0,<5",
+    "pytz>=2024.1",
+    "requests>=2.31",
+    "ripe.atlas.cousteau>=2.2",
+    "urllib3>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2",
+    "pytest>=8.0",
+    "pytest-asyncio>=1.0",
+    "pytest-cov>=6.0",
+    "pytest-env>=1.1",
+    "pytest-mock>=3.14",
+    "twine>=6.0",
+]
+docs = [
+    "sphinx>=8.0",
+    "furo",
+]
+
+[project.urls]
+Homepage = "https://github.com/IP-Geolocation-Project/bigfoot"
+Repository = "https://github.com/IP-Geolocation-Project/bigfoot"
+Issues = "https://github.com/IP-Geolocation-Project/bigfoot/issues"
+
+
+[tool.setuptools.packages.find]
+include = ["bigfoot*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+bigfoot = ["py.typed"]
+"bigfoot.drivers.ark" = ["*.proto"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
+
+[tool.pylint.format]
+max-line-length = 200
+
+[tool.pylint."messages control"]
+disable = ["C0103", "W0718", "W0719"]
+
+[tool.pylint.TYPECHECK]
+# Ignore missing members in protobuf generated files
+ignored-modules = [
+    "bigfoot.drivers.ark.ark_daemon_pb2",
+    "bigfoot.drivers.ark.ark_daemon_pb2_grpc",
+    "bigfoot.drivers.ark.ark_driver",
+]
+
+[tool.mypy]
+disable_error_code = ["import-untyped", "annotation-unchecked"]
+
+[[tool.mypy.overrides]]
+module = ["bigfoot.drivers.ark.ark_driver"]  
+disable_error_codes = ["attr-defined", "name-defined"]
+
+[[tool.mypy.overrides]]
+module = ["bigfoot.drivers.ark.ark_daemon_pb2", "bigfoot.drivers.ark.ark_daemon_pb2_grpc"]
+disable_error_codes = ["attr-defined"]

@@ -1,0 +1,4 @@
+include LICENSE
+recursive-include bigfoot *.proto py.typed
+global-exclude *.py[cod]
+global-exclude __pycache__/*
